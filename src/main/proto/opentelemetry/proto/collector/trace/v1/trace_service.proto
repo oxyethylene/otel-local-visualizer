@@ -1,0 +1,11 @@
+syntax = "proto3";
+package opentelemetry.proto.collector.trace.v1;
+option java_multiple_files = true;
+option java_package = "opentelemetry.proto.collector.trace.v1";
+
+service TraceService {
+  rpc Export(ExportTraceServiceRequest) returns (ExportTraceServiceResponse) {}
+}
+
+message ExportTraceServiceRequest {}
+message ExportTraceServiceResponse {}

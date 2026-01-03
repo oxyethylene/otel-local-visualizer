@@ -1,0 +1,11 @@
+syntax = "proto3";
+package opentelemetry.proto.collector.metrics.v1;
+option java_multiple_files = true;
+option java_package = "opentelemetry.proto.collector.metrics.v1";
+
+service MetricsService {
+  rpc Export(ExportMetricsServiceRequest) returns (ExportMetricsServiceResponse) {}
+}
+
+message ExportMetricsServiceRequest {}
+message ExportMetricsServiceResponse {}

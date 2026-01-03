@@ -3,4 +3,3 @@ spring:
     name: otel-collector
   main:
     banner-mode: off
-

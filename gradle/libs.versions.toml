@@ -1,0 +1,10 @@
+[versions]
+
+[libraries]
+opentelemetry-instrumentationBom = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-instrumentation-bom", version = "2.23.0" }
+
+[bundles]
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version = "4.0.1" }
+spring-dependencyManagement = { id = "io.spring.dependency-management", version = "1.1.7" }
