@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: otel-collector
+  main:
+    banner-mode: off
+
