@@ -2,7 +2,7 @@ plugins {
     id("java")
     alias(libs.plugins.spring.dependencyManagement)
     alias(libs.plugins.spring.boot)
-    id("com.google.protobuf") version "0.9.4"
+    alias(libs.plugins.protobuf)
 }
 
 group = "com.github.oxyethylene"
