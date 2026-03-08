@@ -6,7 +6,9 @@ import io.opentelemetry.proto.collector.metrics.v1.ExportMetricsServiceResponse;
 import io.opentelemetry.proto.collector.metrics.v1.MetricsServiceGrpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MetricsServiceImpl extends MetricsServiceGrpc.MetricsServiceImplBase {
     private static final Logger log = LoggerFactory.getLogger(MetricsServiceImpl.class);
 
