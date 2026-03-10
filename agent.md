@@ -8,43 +8,43 @@ A single-executable Spring Boot JAR that acts as a local OpenTelemetry collector
 
 | Layer | Technology |
 |---|---|
-| Language | Java 25 |
+| Language | Kotlin 2.1.20 (JVM 23 bytecode, JDK 25 toolchain) |
 | Framework | Spring Boot (Web MVC) |
 | gRPC | `spring-grpc-spring-boot-starter` |
 | Build | Gradle (Kotlin DSL) |
-| Protobuf | `protobuf-java` 3.25.3 |
-| Boilerplate | Lombok |
+| Protobuf | `protobuf-java` / `protobuf-kotlin` 3.25.3 |
+| gRPC stubs | `grpc-kotlin-stub` 1.4.1 (coroutine-based) |
 
 ## Repository Layout
 
 ```
 src/
   main/
-    java/com/github/oxyethylene/otelcollector/
-      OtelCollectorApplication.java        # Spring Boot entry point
+    kotlin/com/github/oxyethylene/otelcollector/
+      OtelCollectorApplication.kt        # Spring Boot entry point (top-level main)
       config/
-        WebMvcConfiguration.java           # Prefixes all @RestControllers under /api/v1
+        WebMvcConfiguration.kt           # Prefixes all @RestControllers under /api/v1
       grpc/
-        TraceServiceImpl.java              # Handles OTLP trace exports
-        LogsServiceImpl.java               # Handles OTLP log exports
-        MetricsServiceImpl.java            # Handles OTLP metrics exports
-    proto/                                 # .proto source files (OTLP collector protos)
+        TraceServiceImpl.kt              # Handles OTLP trace exports (suspend fun)
+        LogsServiceImpl.kt               # Handles OTLP log exports (suspend fun)
+        MetricsServiceImpl.kt            # Handles OTLP metrics exports (suspend fun)
+    proto/                               # .proto source files (OTLP collector protos)
     resources/
-      application.yaml                     # Base config (app name, banner off)
-      application-local.yaml              # Local profile: debug logging
+      application.yaml                   # Base config (app name, banner off)
+      application-local.yaml             # Local profile: debug logging
   test/
-    java/.../OtelCollectorApplicationTests.java
+    kotlin/.../OtelCollectorApplicationTests.kt
 http-request/
-  default.http                             # IntelliJ HTTP Client scratch requests
-build.gradle.kts                           # Dependencies, protobuf codegen config
-settings.gradle.kts                        # Root project name: otel-local-visualizer
+  default.http                           # IntelliJ HTTP Client scratch requests
+build.gradle.kts                         # Dependencies, protobuf codegen config
+settings.gradle.kts                      # Root project name: otel-local-visualizer
 ```
 
 ## Key Design Decisions
 
 - **gRPC port**: defaults to `4317` (standard OTLP port); configured via `spring.grpc.server.port` in `application.yaml` or `-Dspring.grpc.server.port=<port>`.
 - **HTTP API prefix**: all `@RestController` endpoints are automatically prefixed with `/api/v1` via `WebMvcConfiguration`.
-- **Proto codegen**: `.proto` files live in `src/main/proto` (and optionally `vendor/opentelemetry-proto`). The Gradle protobuf plugin generates Java stubs + gRPC service bases at build time.
+- **Proto codegen**: `.proto` files live in `src/main/proto` (and optionally `vendor/opentelemetry-proto`). The Gradle protobuf plugin generates both Java message stubs (`protoc-gen-grpc-java`) and Kotlin coroutine-based service stubs (`protoc-gen-grpc-kotlin`) at build time.
 - **Resource deduplication**: `.proto` files are excluded from the final JAR resources to avoid duplicate-entry errors.
 
 ## Build & Run
@@ -72,5 +72,5 @@ OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 ## Adding New Features
 
 - **New REST endpoint**: add a `@RestController` — it will automatically be served under `/api/v1/…`.
-- **New gRPC service**: implement the generated `*ImplBase`, annotate it with `@Service`, and it will be automatically registered.
+- **New gRPC service**: extend the generated `*GrpcKt.*CoroutineImplBase`, annotate with `@Service`, and it will be automatically registered. Service methods are `suspend fun`s returning the response directly.
 - **New proto types**: add `.proto` files under `src/main/proto` and run `./gradlew generateProto`.
