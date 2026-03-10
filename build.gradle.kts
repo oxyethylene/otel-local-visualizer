@@ -23,16 +23,23 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
 
+    implementation(platform("org.springframework.grpc:spring-grpc-dependencies:1.0.2"))
+    implementation("org.springframework.grpc:spring-grpc-spring-boot-starter")
+    implementation("io.grpc:grpc-netty-shaded")
+    modules {
+        module("io.grpc:grpc-netty") {
+            replacedBy("io.grpc:grpc-netty-shaded", "Use Netty shaded instead of regular Netty")
+        }
+    }
+
     implementation(platform(libs.opentelemetry.instrumentationBom))
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-api")
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
 
-    implementation(platform("io.grpc:grpc-bom:1.65.1"))
     implementation("io.grpc:grpc-protobuf")
     implementation("io.grpc:grpc-stub")
 
     implementation("com.google.protobuf:protobuf-java:3.25.3")
-    implementation("io.grpc:grpc-netty-shaded")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
