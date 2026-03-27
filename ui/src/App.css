@@ -1,61 +1,224 @@
 .app {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  font-family: Inter, system-ui, sans-serif;
+  padding: 2.25rem 1rem 2rem;
+  font-family: 'Avenir Next', 'IBM Plex Sans', 'Segoe UI', sans-serif;
 }
 
 header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 header h1 {
-  font-size: 2rem;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
   margin-bottom: 0.25rem;
+  letter-spacing: 0.01em;
 }
 
 .subtitle {
-  color: #888;
+  color: #49606f;
+  font-size: 0.98rem;
+}
+
+.tab-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.tab-button {
+  border: 1px solid #94a8b6;
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  text-align: left;
+  background: #f4f7fa;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
+}
+
+.tab-button:hover {
+  transform: translateY(-1px);
+  border-color: #4e7390;
+}
+
+.tab-button.is-active {
+  border-color: #255d7d;
+  background: linear-gradient(120deg, #e5f2fb, #eef8f2);
+}
+
+.tab-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tab-description {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.82rem;
+  color: #5a6c79;
+}
+
+.panel-container {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d1dde5;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 10px 24px rgba(33, 59, 76, 0.1);
+}
+
+.telemetry-panel h2 {
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.panel-description {
+  color: #4f6474;
+  margin-bottom: 1rem;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 120px minmax(240px, 1fr) auto auto auto;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.input-row label {
+  font-weight: 600;
+}
+
+.input-row input,
+.input-row select {
+  min-height: 40px;
+  border: 1px solid #aac0cf;
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
   font-size: 0.95rem;
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.25rem;
+.input-row button {
+  min-height: 40px;
+  border: 1px solid #2f6b8d;
+  border-radius: 10px;
+  background: #2f6b8d;
+  color: #fff;
+  padding: 0.4rem 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.25rem;
-  background: #fafafa;
+.input-row button:disabled {
+  background: #90a7b6;
+  border-color: #90a7b6;
+  cursor: not-allowed;
 }
 
-.card h2 {
-  margin: 0 0 0.5rem;
-  font-size: 1.15rem;
+.status {
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.9rem;
 }
 
-.card p {
+.status.error {
+  background: #fce8e8;
+  border: 1px solid #e7b2b2;
+  color: #8a2525;
+}
+
+.status.empty {
+  background: #eaf2f8;
+  border: 1px solid #bfd1de;
+  color: #2f4f66;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #d2dee7;
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #edf4f8;
+}
+
+th,
+td {
+  padding: 0.65rem;
+  border-bottom: 1px solid #dde7ee;
+  text-align: left;
+  vertical-align: top;
   font-size: 0.9rem;
-  color: #555;
-  margin: 0 0 0.75rem;
 }
 
-.card code {
-  display: block;
+tbody tr:nth-child(even) {
+  background: #f9fcff;
+}
+
+.subtle {
+  color: #6a7f8d;
   font-size: 0.8rem;
-  background: #f0f0f0;
-  padding: 0.4rem 0.6rem;
-  border-radius: 4px;
-  word-break: break-all;
+  margin-top: 0.15rem;
+}
+
+.log-list {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.log-item {
+  border: 1px solid #cad8e1;
+  border-radius: 12px;
+  background: #f8fbfd;
+  padding: 0.8rem;
+}
+
+.log-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.badge {
+  border: 1px solid #2f6b8d;
+  color: #174d6b;
+  background: #e3f0f8;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.75rem;
+}
+
+.log-body {
+  margin-bottom: 0.35rem;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 footer {
   text-align: center;
-  margin-top: 2rem;
-  color: #aaa;
+  margin-top: 1.2rem;
+  color: #6f8594;
   font-size: 0.85rem;
+}
+
+@media (max-width: 960px) {
+  .tab-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .input-row {
+    grid-template-columns: 1fr;
+  }
 }
