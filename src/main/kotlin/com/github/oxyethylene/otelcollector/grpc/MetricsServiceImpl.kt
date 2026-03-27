@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class MetricsServiceImpl(private val metricStore: MetricStore) : MetricsServiceGrpcKt.MetricsServiceCoroutineImplBase() {
     override suspend fun export(request: ExportMetricsServiceRequest): ExportMetricsServiceResponse {
-        log.info("Received OTLP metrics export")
+        log.debug("Received OTLP metrics export")
         for (resourceMetrics in request.resourceMetricsList) {
             val resource = resourceMetrics.resource
             for (scopeMetrics in resourceMetrics.scopeMetricsList) {

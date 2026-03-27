@@ -22,7 +22,7 @@ class TraceServiceImpl(private val spanStore: SpanStore) : TraceServiceGrpcKt.Tr
                 }
             }
         }
-        log.info("Stored {} span(s) from OTLP traces export", count)
+        log.debug("Stored {} span(s) from OTLP traces export", count)
         return ExportTraceServiceResponse.getDefaultInstance()
     }
 
