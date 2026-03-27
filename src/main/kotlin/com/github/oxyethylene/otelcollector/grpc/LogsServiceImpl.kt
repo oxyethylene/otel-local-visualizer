@@ -20,7 +20,7 @@ class LogsServiceImpl(private val logStore: LogStore) : LogsServiceGrpcKt.LogsSe
                 }
             }
         }
-        log.info("Received OTLP logs export")
+        log.debug("Received OTLP logs export")
         return ExportLogsServiceResponse.getDefaultInstance()
     }
 

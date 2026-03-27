@@ -6,3 +6,7 @@ spring:
   grpc:
     server:
       port: 4317
+
+logging:
+  level:
+    com.github.oxyethylene.otelcollector.grpc: DEBUG
