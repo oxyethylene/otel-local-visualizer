@@ -59,9 +59,14 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 // Avoid packaging .proto files as resources to prevent duplicates
+// and copy pre-built UI assets into the JAR's static/ folder.
+// Build the UI first:  cd ui && npm ci && npm run build
 tasks.processResources {
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
     exclude("**/*.proto")
+    from("ui/dist") {
+        into("static")
+    }
 }
 
 sourceSets {
