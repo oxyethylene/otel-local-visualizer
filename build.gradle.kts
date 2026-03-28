@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.oxyethylene"
-version = "0.0.1-SNAPSHOT"
+version = "0.1.0"
 description = "otel-collector"
 
 java {
