@@ -89,7 +89,9 @@ export function MetricsPanel() {
   return (
     <div className="telemetry-panel">
       <h2>Metric Points</h2>
-      <p className="panel-description">Load metric names and points from /api/v1/metrics endpoints.</p>
+      <p className="panel-description">
+        Load metric names and points from /api/v1/metrics endpoints.
+      </p>
 
       <div className="input-row">
         <label htmlFor="metric-select">Metric Name</label>
@@ -106,13 +108,25 @@ export function MetricsPanel() {
             </option>
           ))}
         </select>
-        <button type="button" onClick={onLoadClick} disabled={isLoadingPoints || !selectedMetricName}>
+        <button
+          type="button"
+          onClick={onLoadClick}
+          disabled={isLoadingPoints || !selectedMetricName}
+        >
           {isLoadingPoints ? 'Loading...' : 'Load'}
         </button>
-        <button type="button" onClick={onRefreshClick} disabled={isLoadingPoints || !loadedMetricName}>
+        <button
+          type="button"
+          onClick={onRefreshClick}
+          disabled={isLoadingPoints || !loadedMetricName}
+        >
           Refresh
         </button>
-        <button type="button" onClick={() => void loadNames()} disabled={isLoadingNames || isLoadingPoints}>
+        <button
+          type="button"
+          onClick={() => void loadNames()}
+          disabled={isLoadingNames || isLoadingPoints}
+        >
           {isLoadingNames ? 'Refreshing...' : 'Refresh Names'}
         </button>
       </div>
