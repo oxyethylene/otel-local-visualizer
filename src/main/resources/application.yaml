@@ -3,4 +3,10 @@ spring:
     name: otel-collector
   main:
     banner-mode: off
+  grpc:
+    server:
+      port: 4317
 
+logging:
+  level:
+    com.github.oxyethylene.otelcollector.grpc: DEBUG
