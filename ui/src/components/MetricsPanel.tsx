@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getMetricNames, getMetricPoints } from '../api/telemetryClient'
 import type { StoredMetricPoint } from '../types/telemetry'
 import { formatAttributePairs, formatNanoTimestamp } from '../utils/format'
+import { MetricChart } from './MetricChart'
 
 function metricValueLabel(point: StoredMetricPoint): string {
   if (typeof point.doubleValue === 'number') {
@@ -135,6 +136,8 @@ export function MetricsPanel() {
       {!error && loadedMetricName && points.length === 0 && !isLoadingPoints && (
         <p className="status empty">No points found for metric {loadedMetricName}.</p>
       )}
+
+      {points.length > 0 && <MetricChart points={points} />}
 
       {points.length > 0 && (
         <div className="table-wrap">
