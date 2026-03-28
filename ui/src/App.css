@@ -35,7 +35,10 @@ header h1 {
   text-align: left;
   background: #f4f7fa;
   cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    background-color 120ms ease;
 }
 
 .tab-button:hover {

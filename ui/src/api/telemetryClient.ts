@@ -6,7 +6,9 @@ async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(`${apiPrefix}${path}`)
   if (!response.ok) {
     const bodyText = await response.text()
-    const message = bodyText ? `${response.status} ${response.statusText}: ${bodyText}` : `${response.status} ${response.statusText}`
+    const message = bodyText
+      ? `${response.status} ${response.statusText}: ${bodyText}`
+      : `${response.status} ${response.statusText}`
     throw new Error(`Request failed for ${path}. ${message}`)
   }
   return (await response.json()) as T

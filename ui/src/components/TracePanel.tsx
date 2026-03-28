@@ -48,7 +48,8 @@ function buildTraceForest(spans: StoredSpan[]): SpanTreeNode[] {
   }
 
   for (const span of spans) {
-    const parentId = span.parentSpanId && spanById.has(span.parentSpanId) ? span.parentSpanId : rootKey
+    const parentId =
+      span.parentSpanId && spanById.has(span.parentSpanId) ? span.parentSpanId : rootKey
     addChild(parentId, span)
   }
 
@@ -64,7 +65,11 @@ function buildTraceForest(spans: StoredSpan[]): SpanTreeNode[] {
   return buildLevel(rootKey, 0)
 }
 
-function flattenVisibleRows(nodes: SpanTreeNode[], collapsedIds: Set<string>, output: VisibleSpanRow[]) {
+function flattenVisibleRows(
+  nodes: SpanTreeNode[],
+  collapsedIds: Set<string>,
+  output: VisibleSpanRow[],
+) {
   for (const node of nodes) {
     const hasChildren = node.children.length > 0
     output.push({ node, hasChildren })
@@ -240,7 +245,11 @@ export function TracePanel() {
               {spans.length} spans total, {visibleRows.length} visible
             </p>
             <div className="trace-toolbar-actions">
-              <button type="button" onClick={onCollapseAll} disabled={allCollapsibleIds.length === 0}>
+              <button
+                type="button"
+                onClick={onCollapseAll}
+                disabled={allCollapsibleIds.length === 0}
+              >
                 Collapse All
               </button>
               <button type="button" onClick={onExpandAll} disabled={collapsedSpanIds.size === 0}>
@@ -272,7 +281,10 @@ export function TracePanel() {
                     className={`trace-row ${isSelected ? 'is-selected' : ''}`}
                     onClick={() => setSelectedSpanId(node.span.spanId)}
                   >
-                    <div className="trace-tree-cell" style={{ paddingLeft: `${node.depth * 18 + 8}px` }}>
+                    <div
+                      className="trace-tree-cell"
+                      style={{ paddingLeft: `${node.depth * 18 + 8}px` }}
+                    >
                       {hasChildren ? (
                         <button
                           type="button"
@@ -281,7 +293,9 @@ export function TracePanel() {
                             event.stopPropagation()
                             onToggleCollapsed(node.span.spanId)
                           }}
-                          aria-label={isCollapsed ? 'Expand span children' : 'Collapse span children'}
+                          aria-label={
+                            isCollapsed ? 'Expand span children' : 'Collapse span children'
+                          }
                         >
                           {isCollapsed ? '+' : '-'}
                         </button>
@@ -318,7 +332,8 @@ export function TracePanel() {
               <p className="subtle">service={selectedSpan.serviceName || 'unknown'}</p>
               <p className="subtle">start={formatNanoTimestamp(selectedSpan.startTimeUnixNano)}</p>
               <p className="subtle">
-                duration={formatDurationMs(selectedSpan.startTimeUnixNano, selectedSpan.endTimeUnixNano)}
+                duration=
+                {formatDurationMs(selectedSpan.startTimeUnixNano, selectedSpan.endTimeUnixNano)}
               </p>
               <p className="subtle">attributes={formatAttributePairs(selectedSpan.attributes)}</p>
             </div>
