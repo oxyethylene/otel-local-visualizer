@@ -9,10 +9,14 @@ import java.util.concurrent.CopyOnWriteArrayList
 class SpanStore {
     private val byTraceId = ConcurrentHashMap<String, CopyOnWriteArrayList<StoredSpan>>()
     private val bySpanId = ConcurrentHashMap<String, StoredSpan>()
+    private val traceInsertionOrder = CopyOnWriteArrayList<String>()
 
     fun store(span: StoredSpan) {
         bySpanId[span.spanId] = span
-        byTraceId.computeIfAbsent(span.traceId) { CopyOnWriteArrayList() }.add(span)
+        byTraceId.computeIfAbsent(span.traceId) {
+            traceInsertionOrder.add(span.traceId)
+            CopyOnWriteArrayList()
+        }.add(span)
     }
 
     fun findByTraceId(traceId: String): List<StoredSpan> =
@@ -20,4 +24,7 @@ class SpanStore {
 
     fun findBySpanId(spanId: String): StoredSpan? =
         bySpanId[spanId]
+
+    fun getRecentTraceIds(limit: Int = 20): List<String> =
+        traceInsertionOrder.takeLast(limit).reversed()
 }

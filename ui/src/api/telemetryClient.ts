@@ -14,6 +14,10 @@ async function fetchJson<T>(path: string): Promise<T> {
   return (await response.json()) as T
 }
 
+export function getRecentTraceIds(limit: number = 20): Promise<string[]> {
+  return fetchJson<string[]>(`/traces/recent?limit=${limit}`)
+}
+
 export function getTraceSpans(traceId: string): Promise<StoredSpan[]> {
   return fetchJson<StoredSpan[]>(`/traces/${encodeURIComponent(traceId)}/spans`)
 }

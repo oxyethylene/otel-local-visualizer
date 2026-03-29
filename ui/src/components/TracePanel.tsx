@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { getTraceSpans } from '../api/telemetryClient'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { getRecentTraceIds, getTraceSpans } from '../api/telemetryClient'
 import type { StoredSpan } from '../types/telemetry'
 import { formatAttributePairs, formatDurationMs, formatNanoTimestamp } from '../utils/format'
 
@@ -97,6 +97,24 @@ export function TracePanel() {
   const [selectedSpanId, setSelectedSpanId] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [recentTraceIds, setRecentTraceIds] = useState<string[]>([])
+  const [isLoadingRecent, setIsLoadingRecent] = useState(false)
+
+  const loadRecentTraces = useCallback(async () => {
+    setIsLoadingRecent(true)
+    try {
+      const ids = await getRecentTraceIds()
+      setRecentTraceIds(ids)
+    } catch {
+      // Recent traces are best-effort; silently ignore failures
+    } finally {
+      setIsLoadingRecent(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    void loadRecentTraces()
+  }, [loadRecentTraces])
 
   const traceForest = useMemo(() => buildTraceForest(spans), [spans])
   const visibleRows = useMemo(() => {
@@ -155,6 +173,7 @@ export function TracePanel() {
       setLoadedTraceId(nextTraceId)
     } finally {
       setIsLoading(false)
+      void loadRecentTraces()
     }
   }
 
@@ -172,6 +191,11 @@ export function TracePanel() {
       return
     }
     void loadByTraceId(loadedTraceId)
+  }
+
+  function onRecentTraceClick(traceId: string) {
+    setTraceIdInput(traceId)
+    void loadByTraceId(traceId)
   }
 
   function onToggleCollapsed(spanId: string) {
@@ -215,6 +239,36 @@ export function TracePanel() {
     <div className="telemetry-panel">
       <h2>Trace Spans</h2>
       <p className="panel-description">Load spans from GET /api/v1/traces/{'{traceId}'}/spans.</p>
+
+      {(recentTraceIds.length > 0 || isLoadingRecent) && (
+        <div className="recent-traces">
+          <div className="recent-traces-header">
+            <span className="recent-traces-title">Recent Traces</span>
+            <button
+              type="button"
+              className="recent-traces-refresh"
+              onClick={() => void loadRecentTraces()}
+              disabled={isLoadingRecent}
+            >
+              {isLoadingRecent ? 'Refreshing…' : 'Refresh'}
+            </button>
+          </div>
+          <div className="recent-traces-list">
+            {recentTraceIds.map((id) => (
+              <button
+                key={id}
+                type="button"
+                className={`recent-trace-chip ${loadedTraceId === id ? 'is-active' : ''}`}
+                onClick={() => onRecentTraceClick(id)}
+                disabled={isLoading}
+                title={id}
+              >
+                {id.length > 16 ? `${id.slice(0, 8)}…${id.slice(-8)}` : id}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="input-row">
         <label htmlFor="trace-id-input">Trace ID</label>
