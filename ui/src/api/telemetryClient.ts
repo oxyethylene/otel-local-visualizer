@@ -1,4 +1,4 @@
-import type { StoredLog, StoredMetricPoint, StoredSpan } from '../types/telemetry'
+import type { StoredLog, StoredMetricPoint, StoredSpan, TraceSummary } from '../types/telemetry'
 
 const apiPrefix = '/api/v1'
 
@@ -12,6 +12,10 @@ async function fetchJson<T>(path: string): Promise<T> {
     throw new Error(`Request failed for ${path}. ${message}`)
   }
   return (await response.json()) as T
+}
+
+export function getRecentTraceSummaries(limit: number = 20): Promise<TraceSummary[]> {
+  return fetchJson<TraceSummary[]>(`/traces/recent?limit=${limit}`)
 }
 
 export function getTraceSpans(traceId: string): Promise<StoredSpan[]> {
