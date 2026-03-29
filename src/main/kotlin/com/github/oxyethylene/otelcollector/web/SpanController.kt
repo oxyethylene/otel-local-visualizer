@@ -1,6 +1,7 @@
 package com.github.oxyethylene.otelcollector.web
 
 import com.github.oxyethylene.otelcollector.model.StoredSpan
+import com.github.oxyethylene.otelcollector.model.TraceSummary
 import com.github.oxyethylene.otelcollector.storage.SpanStore
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 class SpanController(private val spanStore: SpanStore) {
 
     @GetMapping("/traces/recent")
-    fun getRecentTraceIds(@RequestParam(defaultValue = "20") limit: Int): ResponseEntity<List<String>> =
-        ResponseEntity.ok(spanStore.getRecentTraceIds(limit))
+    fun getRecentTraceSummaries(@RequestParam(defaultValue = "20") limit: Int): ResponseEntity<List<TraceSummary>> =
+        ResponseEntity.ok(spanStore.getRecentTraceSummaries(limit))
 
     @GetMapping("/traces/{traceId}/spans")
     fun getSpansByTraceId(@PathVariable traceId: String): ResponseEntity<List<StoredSpan>> {

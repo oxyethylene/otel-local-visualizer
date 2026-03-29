@@ -1,3 +1,12 @@
+export interface TraceSummary {
+  traceId: string
+  rootServiceName: string
+  rootSpanName: string
+  startTimeUnixNano: string
+  endTimeUnixNano: string
+  spanCount: number
+}
+
 export interface StoredSpan {
   traceId: string
   spanId: string
