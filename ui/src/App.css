@@ -352,6 +352,14 @@ tbody tr:nth-child(even) {
   gap: 0.9rem;
 }
 
+/* Side-by-side: span tree (left) + span detail panel (right) */
+.trace-body {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 0.9rem;
+  align-items: start;
+}
+
 .trace-toolbar {
   display: flex;
   justify-content: space-between;
@@ -498,11 +506,78 @@ tbody tr:nth-child(even) {
   border-radius: 10px;
   background: #f5fafd;
   padding: 0.7rem;
+  position: sticky;
+  top: 0.5rem;
+  overflow-y: auto;
+  max-height: 80vh;
 }
 
 .trace-details h3 {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
   color: #1f485f;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+/* Span meta key/value table (spanId, service, etc.) */
+.span-meta-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.5rem;
+  font-size: 0.82rem;
+}
+
+.span-meta-table td {
+  padding: 0.2rem 0.3rem;
+  vertical-align: top;
+}
+
+.span-meta-table td:first-child {
+  font-weight: 600;
+  color: #3a5a6e;
+  white-space: nowrap;
+  padding-right: 0.6rem;
+  width: 5.5rem;
+}
+
+.span-attr-heading {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1f485f;
+  margin: 0.6rem 0 0.3rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #cddce8;
+}
+
+/* Attributes key/value table */
+.span-attr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.span-attr-key {
+  font-weight: 600;
+  color: #2a4f63;
+  padding: 0.2rem 0.4rem 0.2rem 0;
+  vertical-align: top;
+  word-break: break-all;
+  width: 45%;
+  border-bottom: 1px solid #e4edf3;
+}
+
+.span-attr-value {
+  color: #3a5a70;
+  padding: 0.2rem 0 0.2rem 0.3rem;
+  vertical-align: top;
+  word-break: break-all;
+  border-bottom: 1px solid #e4edf3;
+}
+
+.mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  word-break: break-all;
 }
 
 footer {
@@ -537,6 +612,15 @@ footer {
   .trace-chart-header,
   .trace-row {
     grid-template-columns: 1fr;
+  }
+
+  .trace-body {
+    grid-template-columns: 1fr;
+  }
+
+  .trace-details {
+    position: static;
+    max-height: none;
   }
 
   .timeline-cell {

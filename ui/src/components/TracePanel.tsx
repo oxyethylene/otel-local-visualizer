@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getRecentTraceSummaries, getTraceSpans } from '../api/telemetryClient'
 import type { StoredSpan, TraceSummary } from '../types/telemetry'
-import { formatAttributePairs, formatDurationMs, formatNanoTimestamp } from '../utils/format'
+import { formatDurationMs, formatNanoTimestamp } from '../utils/format'
 
 // ─── Span tree helpers ────────────────────────────────────────────────────────
 
@@ -212,74 +212,117 @@ function TraceDetailView({ traceId, onBack }: TraceDetailViewProps) {
             </div>
           )}
 
-          <div className="trace-chart">
-            <div className="trace-chart-header">
-              <span>Span Tree</span>
-              <span>Timeline</span>
-            </div>
-            <ul className="trace-rows">
-              {visibleRows.map(({ node, hasChildren }) => {
-                const isCollapsed = collapsedSpanIds.has(node.span.spanId)
-                const isSelected = selectedSpanId === node.span.spanId
-                return (
-                  <li
-                    key={node.span.spanId}
-                    className={`trace-row ${isSelected ? 'is-selected' : ''}`}
-                    onClick={() => setSelectedSpanId(node.span.spanId)}
-                  >
-                    <div
-                      className="trace-tree-cell"
-                      style={{ paddingLeft: `${node.depth * 18 + 8}px` }}
+          <div className="trace-body">
+            <div className="trace-chart">
+              <div className="trace-chart-header">
+                <span>Span Tree</span>
+                <span>Timeline</span>
+              </div>
+              <ul className="trace-rows">
+                {visibleRows.map(({ node, hasChildren }) => {
+                  const isCollapsed = collapsedSpanIds.has(node.span.spanId)
+                  const isSelected = selectedSpanId === node.span.spanId
+                  return (
+                    <li
+                      key={node.span.spanId}
+                      className={`trace-row ${isSelected ? 'is-selected' : ''}`}
+                      onClick={() => setSelectedSpanId(node.span.spanId)}
                     >
-                      {hasChildren ? (
-                        <button
-                          type="button"
-                          className="collapse-toggle"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            onToggleCollapsed(node.span.spanId)
-                          }}
-                          aria-label={isCollapsed ? 'Expand span children' : 'Collapse span children'}
-                        >
-                          {isCollapsed ? '+' : '-'}
-                        </button>
-                      ) : (
-                        <span className="collapse-toggle placeholder" />
-                      )}
-                      <div>
-                        <strong>{node.span.name}</strong>
-                        <div className="subtle">
-                          {node.span.serviceName || 'unknown'} | {node.span.statusCode || 'UNSET'} |{' '}
-                          {formatDurationMs(node.span.startTimeUnixNano, node.span.endTimeUnixNano)}
+                      <div
+                        className="trace-tree-cell"
+                        style={{ paddingLeft: `${node.depth * 18 + 8}px` }}
+                      >
+                        {hasChildren ? (
+                          <button
+                            type="button"
+                            className="collapse-toggle"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onToggleCollapsed(node.span.spanId)
+                            }}
+                            aria-label={isCollapsed ? 'Expand span children' : 'Collapse span children'}
+                          >
+                            {isCollapsed ? '+' : '-'}
+                          </button>
+                        ) : (
+                          <span className="collapse-toggle placeholder" />
+                        )}
+                        <div>
+                          <strong>{node.span.name}</strong>
+                          <div className="subtle">
+                            {node.span.serviceName || 'unknown'} | {node.span.statusCode || 'UNSET'} |{' '}
+                            {formatDurationMs(node.span.startTimeUnixNano, node.span.endTimeUnixNano)}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="timeline-cell">
-                      <div className="timeline-track" />
-                      <div className="timeline-bar" style={getTimelineStyle(node.span)} />
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-
-          {selectedSpan && (
-            <div className="trace-details">
-              <h3>Selected Span</h3>
-              <p>
-                <strong>{selectedSpan.name}</strong>
-              </p>
-              <p className="subtle">spanId={selectedSpan.spanId}</p>
-              <p className="subtle">parentSpanId={selectedSpan.parentSpanId || 'root'}</p>
-              <p className="subtle">service={selectedSpan.serviceName || 'unknown'}</p>
-              <p className="subtle">start={formatNanoTimestamp(selectedSpan.startTimeUnixNano)}</p>
-              <p className="subtle">
-                duration={formatDurationMs(selectedSpan.startTimeUnixNano, selectedSpan.endTimeUnixNano)}
-              </p>
-              <p className="subtle">attributes={formatAttributePairs(selectedSpan.attributes)}</p>
+                      <div className="timeline-cell">
+                        <div className="timeline-track" />
+                        <div className="timeline-bar" style={getTimelineStyle(node.span)} />
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
             </div>
-          )}
+
+            <div className="trace-details">
+              {selectedSpan ? (
+                <>
+                  <h3>{selectedSpan.name}</h3>
+                  <table className="span-meta-table">
+                    <tbody>
+                      <tr>
+                        <td>Span ID</td>
+                        <td><span className="mono">{selectedSpan.spanId}</span></td>
+                      </tr>
+                      <tr>
+                        <td>Parent ID</td>
+                        <td><span className="mono">{selectedSpan.parentSpanId || 'root'}</span></td>
+                      </tr>
+                      <tr>
+                        <td>Service</td>
+                        <td>{selectedSpan.serviceName || '—'}</td>
+                      </tr>
+                      <tr>
+                        <td>Kind</td>
+                        <td>{selectedSpan.kind || '—'}</td>
+                      </tr>
+                      <tr>
+                        <td>Status</td>
+                        <td>{selectedSpan.statusCode || 'UNSET'}{selectedSpan.statusMessage ? ` — ${selectedSpan.statusMessage}` : ''}</td>
+                      </tr>
+                      <tr>
+                        <td>Start</td>
+                        <td>{formatNanoTimestamp(selectedSpan.startTimeUnixNano)}</td>
+                      </tr>
+                      <tr>
+                        <td>Duration</td>
+                        <td>{formatDurationMs(selectedSpan.startTimeUnixNano, selectedSpan.endTimeUnixNano)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  {Object.keys(selectedSpan.attributes).length > 0 && (
+                    <>
+                      <h4 className="span-attr-heading">Attributes</h4>
+                      <table className="span-attr-table">
+                        <tbody>
+                          {Object.entries(selectedSpan.attributes).map(([key, value]) => (
+                            <tr key={key}>
+                              <td className="span-attr-key">{key}</td>
+                              <td className="span-attr-value">{value}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
+                </>
+              ) : (
+                <p className="subtle">Select a span to see details.</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
